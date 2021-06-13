@@ -3,7 +3,6 @@ from typing import Optional
 from fastapi import FastAPI
 import datetime
 
-
 class Player:
 
     def __init__(self, game_id, player_id, name):
@@ -141,3 +140,12 @@ def read_data_for_connect(game: int = None, key: int = None, name: str = None):
         response = 1
     return {"response": response}
 
+@app.get("/game/start/")
+def start_game_request(game: int = None, key: int = None, secret: int = None):
+    response = 0
+    if secret == Session.secret_key:
+        game = Session.check_game_key(game, key)
+        if game != 0:
+            game.status = True
+            response = 1
+    return {"response": response}
